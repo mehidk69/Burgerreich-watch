@@ -1360,7 +1360,9 @@ window.ftMap = L.map('map-bg', {
   maxZoom: 10,
   zoomControl: true,
   attributionControl: true,
-  worldCopyJump: true
+  worldCopyJump: false,
+  maxBounds: [[-85, -180], [85, 180]],
+  maxBoundsViscosity: 1.0
 });
 const map = window.ftMap;
 
@@ -1368,7 +1370,8 @@ const map = window.ftMap;
 L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
   attribution: '&copy; <a href="https://carto.com/">CARTO</a> &copy; <a href="https://www.openstreetmap.org/copyright">OSM</a>',
   subdomains: 'abcd',
-  maxZoom: 19
+  maxZoom: 19,
+  noWrap: true
 }).addTo(map);
 
 // Layer groups for toggle
