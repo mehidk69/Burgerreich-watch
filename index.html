@@ -1017,9 +1017,9 @@ function renderTollDetails() {
 // ============================================================
 const MAP_VIEWS = {
   // Primary tab views
-  csg:     { center: [20, 30], zoom: 2 },
-  cocom:   { center: [20, 30], zoom: 2 },
-  posture: { center: [30, 50], zoom: 2 },
+  csg:     { center: [20, 30], zoom: 3 },
+  cocom:   { center: [20, 30], zoom: 3 },
+  posture: { center: [30, 50], zoom: 3 },
   toll:    { center: [30, 42], zoom: 4 },
   // COCOM-specific views
   centcom:   { center: [26, 50], zoom: 4 },
@@ -1028,7 +1028,7 @@ const MAP_VIEWS = {
   northcom:  { center: [45, -100], zoom: 3 },
   southcom:  { center: [-5, -65], zoom: 3 },
   africom:   { center: [5, 20], zoom: 3 },
-  stratcom:  { center: [35, -40], zoom: 2 },
+  stratcom:  { center: [35, -40], zoom: 3 },
   cybercom:  { center: [39, -77], zoom: 5 },
   spacecom:  { center: [38, -104], zoom: 5 },
   transcom:  { center: [38, -90], zoom: 4 },
@@ -1354,9 +1354,9 @@ const MAP_AIRCRAFT = [
 // ── INIT MAP ──
 
 window.ftMap = L.map('map-bg', {
-  center: [20, 30],
-  zoom: 2,
-  minZoom: 2,
+  center: [25, 20],
+  zoom: 3,
+  minZoom: 3,
   maxZoom: 10,
   zoomControl: true,
   attributionControl: true,
@@ -1371,7 +1371,8 @@ L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
   attribution: '&copy; <a href="https://carto.com/">CARTO</a> &copy; <a href="https://www.openstreetmap.org/copyright">OSM</a>',
   subdomains: 'abcd',
   maxZoom: 19,
-  noWrap: true
+  noWrap: true,
+  bounds: [[-85, -180], [85, 180]]
 }).addTo(map);
 
 // Layer groups for toggle
