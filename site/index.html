@@ -1354,15 +1354,13 @@ const MAP_AIRCRAFT = [
 // ── INIT MAP ──
 
 window.ftMap = L.map('map-bg', {
-  center: [25, 20],
+  center: [25, 40],
   zoom: 3,
   minZoom: 2,
   maxZoom: 10,
   zoomControl: true,
   attributionControl: true,
-  worldCopyJump: false,
-  maxBounds: [[-90, -220], [90, 220]],
-  maxBoundsViscosity: 0.8
+  worldCopyJump: false
 });
 const map = window.ftMap;
 
@@ -1370,25 +1368,30 @@ const map = window.ftMap;
 L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}{r}.png', {
   attribution: '&copy; CARTO &copy; OSM',
   subdomains: 'abcd',
-  maxZoom: 19,
-  noWrap: true
+  maxZoom: 19
 }).addTo(map);
-// Labels as separate layer (renders on top of markers nicely)
 L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_only_labels/{z}/{x}/{y}{r}.png', {
   subdomains: 'abcd',
   maxZoom: 19,
-  noWrap: true,
   pane: 'overlayPane'
 }).addTo(map);
 
-// Fit map to show the whole world properly on load, offset for sidebar
+// Scale map to fill viewport — zero black space
 setTimeout(() => {
-  const sidebarW = 500;
-  map.fitBounds([[-55, -170],[70, 190]], {
-    paddingTopLeft: [sidebarW, 50],
-    paddingBottomRight: [10, 35]
+  map.invalidateSize();
+  // Get visible map area (right of sidebar)
+  const sb = document.getElementById('sidebar');
+  const sbW = sb ? sb.offsetWidth : 500;
+  const mapW = window.innerWidth;
+  const mapH = window.innerHeight;
+  // If sidebar takes less than half, offset; otherwise full width
+  const padL = sbW < mapW * 0.5 ? sbW : 0;
+  map.fitBounds([[-60, -170],[72, 195]], {
+    paddingTopLeft: [padL + 20, 50],
+    paddingBottomRight: [20, 40],
+    animate: false
   });
-}, 100);
+}, 150);
 
 // Layer groups for toggle
 window.ftLayers = {
@@ -1554,11 +1557,20 @@ CONFLICT_TOLL_DATA.forEach(c => {
 // Force map resize after load
 setTimeout(() => {
   map.invalidateSize();
-  map.fitBounds([[-55, -170],[70, 190]], {
-    paddingTopLeft: [500, 50],
-    paddingBottomRight: [10, 35]
+  const sb = document.getElementById('sidebar');
+  const padL = sb ? sb.offsetWidth + 20 : 20;
+  map.fitBounds([[-60, -170],[72, 195]], {
+    paddingTopLeft: [padL, 50],
+    paddingBottomRight: [20, 40],
+    animate: false
   });
 }, 300);
+
+// Refit on window resize
+window.addEventListener('resize', () => {
+  if (!window.ftMap) return;
+  window.ftMap.invalidateSize();
+});
 
 } // end Leaflet check
 
