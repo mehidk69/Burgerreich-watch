@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Burgerreich Watch @ das_DEMARC</title>
+<title>BURGERREICH_watch @ das_DEMARC</title>
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 <style>
   :root {
@@ -280,7 +280,7 @@
 <!-- ═══ TOP BAR ═══ -->
 <div class="topbar">
   <div class="topbar-left">
-    <div class="topbar-brand">BURGERREICH WATCH<span>@ das_DEMARC:\\<a href="https://dasdemarc.substack.com" target="_blank" class="brand-link">SUBSTACK</a>\\<a href="https://github.com/mehidk69" target="_blank" class="brand-link">GITHUB</a>\\<a href="https://comradecorium.github.io/specterwatch" target="_blank" class="brand-link">SPECTERWATCH</a>\\<a href="https://wannndows69.github.io/Follow-the-Money-/" target="_blank" class="brand-link brand-link-bop">BoP</a>&gt;<span class="cursor">_</span></span></div>
+    <div class="topbar-brand">BURGERREICH_watch@<span> das_DEMARC:\\<a href="https://dasdemarc.substack.com" target="_blank" class="brand-link">SUBSTACK</a>\\<a href="https://github.com/mehidk69" target="_blank" class="brand-link">GITHUB</a>\\<a href="https://comradecorium.github.io/specterwatch" target="_blank" class="brand-link">SPECTERWATCH</a>\\<a href="https://wannndows69.github.io/Follow-the-Money-/" target="_blank" class="brand-link brand-link-bop">BoP</a>&gt;<span class="cursor">_</span></span></div>
   </div>
   <div class="topbar-center">
     <div class="topbar-casualties">
@@ -1094,7 +1094,7 @@ if (_consoleEl) _consoleEl.addEventListener('keydown', function(e) {
 
   if (cmd === 'help') {
     alert(
-      'BURGERREICH WATCH CONSOLE\n' +
+      'BURGERREICH_watch CONSOLE\n' +
       '─────────────────────────\n' +
       'help          — Show this help\n' +
       'status        — System status\n' +
@@ -1104,7 +1104,7 @@ if (_consoleEl) _consoleEl.addEventListener('keydown', function(e) {
       'about         — About this tracker'
     );
   } else if (cmd === 'status') {
-    alert('BURGERREICH WATCH v0.1\nStatus: OPERATIONAL\nData: SEED (collectors pending)\nLast update: ' + new Date().toISOString());
+    alert('BURGERREICH_watch v0.1\nStatus: OPERATIONAL\nData: SEED (collectors pending)\nLast update: ' + new Date().toISOString());
   } else if (cmd === 'csg') {
     const list = CARRIER_GROUPS.map(c => `${c.name} ${c.carrier} — ${c.status.toUpperCase()} — ${c.region}`).join('\n');
     alert('CARRIER STRIKE GROUPS\n─────────────────────\n' + list);
@@ -1113,7 +1113,7 @@ if (_consoleEl) _consoleEl.addEventListener('keydown', function(e) {
     const tab = document.querySelector(`.cocom-tab[data-cocom="${name}"]`);
     if (tab) { tab.click(); } else { alert('Unknown COCOM: ' + name); }
   } else if (cmd === 'about') {
-    alert('BURGERREICH WATCH @ das_DEMARC\n\nOpen-source US military force tracking dashboard.\nAll data from publicly available OSINT and official DoD releases.\n\nNOT AFFILIATED WITH DoD OR ANY GOVERNMENT ENTITY.\n\nhttps://dasdemarc.substack.com');
+    alert('BURGERREICH_watch @ das_DEMARC\n\nOpen-source US military force tracking dashboard.\nAll data from publicly available OSINT and official DoD releases.\n\nNOT AFFILIATED WITH DoD OR ANY GOVERNMENT ENTITY.\n\nhttps://dasdemarc.substack.com');
   }
 });
 
