@@ -1017,9 +1017,9 @@ function renderTollDetails() {
 // ============================================================
 const MAP_VIEWS = {
   // Primary tab views
-  csg:     { center: [20, 30], zoom: 3 },
-  cocom:   { center: [20, 30], zoom: 3 },
-  posture: { center: [30, 50], zoom: 3 },
+  csg:     { center: [32, 45], zoom: 4 },
+  cocom:   { center: [32, 45], zoom: 4 },
+  posture: { center: [32, 45], zoom: 4 },
   toll:    { center: [30, 42], zoom: 4 },
   // COCOM-specific views
   centcom:   { center: [26, 50], zoom: 4 },
@@ -1354,8 +1354,8 @@ const MAP_AIRCRAFT = [
 // ── INIT MAP ──
 
 window.ftMap = L.map('map-bg', {
-  center: [30, 40],
-  zoom: 3,
+  center: [32, 45],
+  zoom: 4,
   minZoom: 3,
   maxZoom: 10,
   zoomControl: true,
@@ -1381,7 +1381,7 @@ setTimeout(() => {
   map.invalidateSize();
   const sb = document.getElementById('sidebar');
   const padL = sb ? sb.offsetWidth : 500;
-  map.setView([30, 40], 3, { animate: false });
+  map.setView([32, 45], 4, { animate: false });
 }, 150);
 
 // Layer groups for toggle
@@ -1548,7 +1548,7 @@ CONFLICT_TOLL_DATA.forEach(c => {
 // Force map resize after load
 setTimeout(() => {
   map.invalidateSize();
-  map.setView([30, 40], 3, { animate: false });
+  map.setView([32, 45], 4, { animate: false });
 }, 300);
 
 // Keep map sized on window resize
