@@ -1361,7 +1361,7 @@ window.ftMap = L.map('map-bg', {
   zoomControl: true,
   attributionControl: true,
   worldCopyJump: false,
-  maxBounds: [[-90, -200], [90, 200]],
+  maxBounds: [[-90, -220], [90, 220]],
   maxBoundsViscosity: 0.8
 });
 const map = window.ftMap;
@@ -1381,8 +1381,14 @@ L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_only_labels/{z}/{x}/{y}{r}.p
   pane: 'overlayPane'
 }).addTo(map);
 
-// Fit map to show the whole world properly on load
-setTimeout(() => { map.fitBounds([[-50, -160],[65, 170]], { padding: [0,0] }); }, 100);
+// Fit map to show the whole world properly on load, offset for sidebar
+setTimeout(() => {
+  const sidebarW = 500;
+  map.fitBounds([[-55, -170],[70, 190]], {
+    paddingTopLeft: [sidebarW, 50],
+    paddingBottomRight: [10, 35]
+  });
+}, 100);
 
 // Layer groups for toggle
 window.ftLayers = {
@@ -1546,7 +1552,13 @@ CONFLICT_TOLL_DATA.forEach(c => {
 });
 
 // Force map resize after load
-setTimeout(() => { map.invalidateSize(); map.fitBounds([[-50, -160],[65, 170]], { padding: [0,0] }); }, 300);
+setTimeout(() => {
+  map.invalidateSize();
+  map.fitBounds([[-55, -170],[70, 190]], {
+    paddingTopLeft: [500, 50],
+    paddingBottomRight: [10, 35]
+  });
+}, 300);
 
 } // end Leaflet check
 
