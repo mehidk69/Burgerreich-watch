@@ -32,8 +32,8 @@
   body { background:#000; color:var(--text); font-family:var(--font); font-size:14px; line-height:1.6; overflow:hidden; height:100vh; }
 
   /* ═══ FULL-PAGE MAP ═══ */
-  #map-bg { position:fixed; top:0; left:0; width:100%; height:100%; z-index:0; background:#0a0a0a; }
-  .leaflet-container { background:#080808; }
+  #map-bg { position:fixed; top:0; left:0; width:100%; height:100%; z-index:0; background:#000; }
+  .leaflet-container { background:#000; }
   .leaflet-control-zoom a { background:#111!important; color:var(--accent)!important; border-color:var(--border)!important; }
   .leaflet-control-zoom { margin-top:60px!important; margin-right:12px!important; }
   .leaflet-control-attribution { background:rgba(0,0,0,0.6)!important; color:#555!important; font-size:9px!important; }
@@ -1017,9 +1017,9 @@ function renderTollDetails() {
 // ============================================================
 const MAP_VIEWS = {
   // Primary tab views
-  csg:     { center: [20, 30], zoom: 2 },
-  cocom:   { center: [20, 30], zoom: 2 },
-  posture: { center: [30, 50], zoom: 2 },
+  csg:     { center: [20, 30], zoom: 3 },
+  cocom:   { center: [20, 30], zoom: 3 },
+  posture: { center: [30, 50], zoom: 3 },
   toll:    { center: [30, 42], zoom: 4 },
   // COCOM-specific views
   centcom:   { center: [26, 50], zoom: 4 },
@@ -1028,7 +1028,7 @@ const MAP_VIEWS = {
   northcom:  { center: [45, -100], zoom: 3 },
   southcom:  { center: [-5, -65], zoom: 3 },
   africom:   { center: [5, 20], zoom: 3 },
-  stratcom:  { center: [35, -40], zoom: 2 },
+  stratcom:  { center: [35, -40], zoom: 3 },
   cybercom:  { center: [39, -77], zoom: 5 },
   spacecom:  { center: [38, -104], zoom: 5 },
   transcom:  { center: [38, -90], zoom: 4 },
@@ -1354,25 +1354,35 @@ const MAP_AIRCRAFT = [
 // ── INIT MAP ──
 
 window.ftMap = L.map('map-bg', {
-  center: [20, 30],
-  zoom: 2,
+  center: [25, 20],
+  zoom: 3,
   minZoom: 2,
   maxZoom: 10,
   zoomControl: true,
   attributionControl: true,
   worldCopyJump: false,
-  maxBounds: [[-85, -180], [85, 180]],
-  maxBoundsViscosity: 1.0
+  maxBounds: [[-90, -200], [90, 200]],
+  maxBoundsViscosity: 0.8
 });
 const map = window.ftMap;
 
 // Dark CartoDB tiles
-L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
-  attribution: '&copy; <a href="https://carto.com/">CARTO</a> &copy; <a href="https://www.openstreetmap.org/copyright">OSM</a>',
+L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}{r}.png', {
+  attribution: '&copy; CARTO &copy; OSM',
   subdomains: 'abcd',
   maxZoom: 19,
   noWrap: true
 }).addTo(map);
+// Labels as separate layer (renders on top of markers nicely)
+L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_only_labels/{z}/{x}/{y}{r}.png', {
+  subdomains: 'abcd',
+  maxZoom: 19,
+  noWrap: true,
+  pane: 'overlayPane'
+}).addTo(map);
+
+// Fit map to show the whole world properly on load
+setTimeout(() => { map.fitBounds([[-50, -160],[65, 170]], { padding: [0,0] }); }, 100);
 
 // Layer groups for toggle
 window.ftLayers = {
@@ -1536,7 +1546,7 @@ CONFLICT_TOLL_DATA.forEach(c => {
 });
 
 // Force map resize after load
-setTimeout(() => { map.invalidateSize(); }, 200);
+setTimeout(() => { map.invalidateSize(); map.fitBounds([[-50, -160],[65, 170]], { padding: [0,0] }); }, 300);
 
 } // end Leaflet check
 
