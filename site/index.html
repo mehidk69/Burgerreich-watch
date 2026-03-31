@@ -18,13 +18,13 @@
     --yellow: #ffcc00;
     --cyan: #00cccc;
     --magenta: #cc66ff;
-    --text: #d6d2cc;
-    --text-dim: #8a8a8a;
-    --text-bright: #e8e4df;
+    --text: #cdc4b8;
+    --text-dim: #9a8e80;
+    --text-bright: #e0d5c8;
     --font: 'Consolas','Monaco','Courier New',monospace;
     --glass: rgba(10,10,10,0.78);
     --glass-border: rgba(255,255,255,0.08);
-    --sidebar-w: 520px;
+    --sidebar-w: 740px;
     --topbar-h: 50px;
     --ticker-h: 36px;
   }
@@ -36,8 +36,8 @@
   .leaflet-container { background:#000; }
   .leaflet-control-zoom a { background:#111!important; color:var(--accent)!important; border-color:var(--border)!important; }
   .leaflet-control-zoom { margin-top:90px!important; margin-right:12px!important; }
-  .leaflet-control-attribution { background:rgba(0,0,0,0.6)!important; color:#555!important; font-size:10px!important; }
-  .leaflet-control-attribution a { color:#555!important; }
+  .leaflet-control-attribution { background:rgba(0,0,0,0.6)!important; color:#6b6155!important; font-size:10px!important; }
+  .leaflet-control-attribution a { color:#6b6155!important; }
   .leaflet-popup-content-wrapper { background:#111!important; color:var(--text)!important; border:1px solid var(--accent)!important; border-radius:3px!important; font-family:var(--font)!important; font-size:12px!important; box-shadow:0 0 24px rgba(255,140,0,0.12)!important; }
   .leaflet-popup-tip { background:#111!important; }
   .leaflet-popup-close-button { color:var(--accent)!important; }
@@ -103,7 +103,7 @@
   .cas-tooltip-title { color:#ff3333; font-weight:bold; font-size:14px; letter-spacing:1px; margin-bottom:6px; }
   .cas-tooltip-row { color:var(--text-bright); font-size:14px; margin-bottom:6px; }
   .cas-tooltip-detail { color:var(--text-dim); font-size:12px; line-height:1.5; margin-bottom:8px; }
-  .cas-tooltip-src { color:#555; font-size:11px; border-top:1px solid #222; padding-top:6px; }
+  .cas-tooltip-src { color:#6b6155; font-size:11px; border-top:1px solid #222; padding-top:6px; }
 
   /* Sources dropdown */
   .sources-trigger { cursor:pointer; border-bottom:1px dashed var(--text-dim); padding-bottom:1px; position:relative; }
@@ -162,6 +162,22 @@
   .sidebar-content::-webkit-scrollbar-thumb { background:rgba(255,255,255,0.08); border-radius:2px; }
   .sidebar-panel { display:none; padding:18px 20px; }
   .sidebar-panel.active { display:block; }
+  #panel-csg { padding:0; }
+
+  /* CSG sub-tabs */
+  .csg-subtabs {
+    display:flex; gap:0; border-bottom:1px solid rgba(255,255,255,0.06);
+  }
+  .csg-subtab {
+    flex:1; padding:10px 12px; font-family:var(--font); font-size:12px; font-weight:bold;
+    color:var(--text-dim); background:none; border:none; cursor:pointer;
+    border-bottom:2px solid transparent; transition:all 0.15s;
+    letter-spacing:0.5px; text-align:center;
+  }
+  .csg-subtab:hover { color:var(--text); background:rgba(255,255,255,0.02); }
+  .csg-subtab.active { color:var(--accent); border-bottom-color:var(--accent); background:rgba(255,140,0,0.04); }
+  .csg-subpanel { display:none; padding:14px 18px; }
+  .csg-subpanel.active { display:block; }
   .posture-sub { display:none; padding-top:10px; }
   .posture-sub.active { display:block; }
 
@@ -202,13 +218,13 @@
 
   .table-scroll { overflow-x:auto; }
   .table-scroll::-webkit-scrollbar { height:4px; }
-  .table-scroll::-webkit-scrollbar-thumb { background:var(--border); }
-  .csg-table { width:100%; border-collapse:collapse; min-width:380px; }
-  .csg-table th { text-align:left; color:var(--text-dim); font-size:12px; text-transform:uppercase; letter-spacing:1px; padding:8px 10px; border-bottom:1px solid rgba(255,255,255,0.08); white-space:nowrap; }
-  .csg-table td { padding:12px 12px; font-size:14px; border-bottom:1px solid rgba(255,255,255,0.05); }
+  .table-scroll::-webkit-scrollbar-thumb { background:rgba(255,255,255,0.08); }
+  .csg-table { width:100%; border-collapse:collapse; min-width:700px; }
+  .csg-table th { text-align:left; color:var(--text-dim); font-size:12px; text-transform:uppercase; letter-spacing:1px; padding:10px 20px 10px 12px; border-bottom:1px solid rgba(255,255,255,0.08); white-space:nowrap; }
+  .csg-table td { padding:12px 20px 12px 12px; font-size:14px; border-bottom:1px solid rgba(255,255,255,0.05); white-space:nowrap; }
   .csg-table tr:hover { background:rgba(255,140,0,0.06); }
   .csg-table tr[onclick]:active { background:rgba(255,140,0,0.12); }
-  .csg-name { color:var(--text-bright); font-weight:bold; }
+  .csg-name { color:#fbc387; font-weight:bold; }
   .csg-hull { color:var(--text-dim); font-size:13px; }
   .status-deployed { color:var(--red); }
   .status-transit { color:var(--yellow); }
@@ -359,10 +375,16 @@
   <div class="sidebar-content">
     <!-- CSG Panel -->
     <div class="sidebar-panel active" id="panel-csg">
-      <div class="section-label" style="margin-top:0;">Carrier Strike Groups</div>
-      <div class="table-scroll"><table class="csg-table"><thead><tr><th>CSG</th><th>Carrier</th><th>Status</th><th>Region</th></tr></thead><tbody id="csg-body"></tbody></table></div>
-      <div class="section-label">Amphibious Ready Groups / MEU</div>
-      <div class="table-scroll"><table class="csg-table"><thead><tr><th>ARG/MEU</th><th>Ship</th><th>Status</th><th>Region</th></tr></thead><tbody id="arg-body"></tbody></table></div>
+      <div class="csg-subtabs">
+        <button class="csg-subtab active" onclick="switchCSGSub('carriers',this)">CARRIER STRIKE GROUPS</button>
+        <button class="csg-subtab" onclick="switchCSGSub('args',this)">ARG / MEU</button>
+      </div>
+      <div class="csg-subpanel active" id="sub-carriers">
+        <div class="table-scroll"><table class="csg-table"><thead><tr><th>CSG</th><th>Carrier</th><th>Status</th><th>Region</th></tr></thead><tbody id="csg-body"></tbody></table></div>
+      </div>
+      <div class="csg-subpanel" id="sub-args">
+        <div class="table-scroll"><table class="csg-table"><thead><tr><th>ARG/MEU</th><th>Ship</th><th>Status</th><th>Region</th></tr></thead><tbody id="arg-body"></tbody></table></div>
+      </div>
     </div>
     <!-- COCOM Panel -->
     <div class="sidebar-panel" id="panel-cocom">
@@ -1021,7 +1043,7 @@ function renderTollDetails() {
     <div style="padding:10px 0;border-bottom:1px solid #151515;">
       <div style="display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap;gap:4px;">
         <span style="color:${c.color};font-size:12px;font-weight:bold;letter-spacing:1px;">${c.name}</span>
-        <span style="color:#e8e4df;font-size:14px;font-weight:bold;">${c.label}</span>
+        <span style="color:#e0d5c8;font-size:14px;font-weight:bold;">${c.label}</span>
       </div>
       <div style="color:var(--text-dim);font-size:13px;margin-top:3px;">${c.detail} · ${c.period}</div>
       <div style="color:#777;font-size:13px;margin-top:4px;line-height:1.4;">${c.note}</div>
@@ -1078,6 +1100,13 @@ function switchSidebar(panel, btn) {
   } else {
     flyMap('csg');
   }
+}
+
+function switchCSGSub(sub, btn) {
+  document.querySelectorAll('.csg-subtab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.csg-subpanel').forEach(p => p.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('sub-' + sub).classList.add('active');
 }
 
 // ============================================================
@@ -1198,7 +1227,7 @@ if (typeof L === 'undefined') {
   if (mapEl) {
     mapEl.innerHTML = `
       <div style="display:flex;align-items:center;justify-content:center;height:100%;
-        flex-direction:column;gap:8px;color:#666;font-family:Consolas,monospace;">
+        flex-direction:column;gap:8px;color:#7a7062;font-family:Consolas,monospace;">
         <div style="color:#ff8c00;font-size:14px;font-weight:bold;">■ MAP OFFLINE</div>
         <div style="font-size:11px;">Leaflet CDN unavailable — map renders on GitHub Pages or local file open.</div>
         <div style="font-size:10px;color:#444;">Requires: unpkg.com/leaflet@1.9.4</div>
@@ -1491,8 +1520,8 @@ FORCE_POSTURE.forEach(p => {
     .bindPopup(`
       <div style="font-family:Consolas,monospace;">
         <div class="popup-title">${p.region}</div>
-        <div style="color:#e8e4df;font-size:20px;font-weight:bold;">${p.count}<span style="color:${deltaColor};font-size:13px;">${deltaSymbol}</span></div>
-        <div style="color:#aaa;font-size:13px;margin-top:3px;">US personnel · ${p.note}</div>
+        <div style="color:#e0d5c8;font-size:20px;font-weight:bold;">${p.count}<span style="color:${deltaColor};font-size:13px;">${deltaSymbol}</span></div>
+        <div style="color:#b0a594;font-size:13px;margin-top:3px;">US personnel · ${p.note}</div>
       </div>
     `, { maxWidth: 260 });
   layers.posture.addLayer(marker);
@@ -1555,10 +1584,10 @@ CONFLICT_TOLL_DATA.forEach(c => {
   circle.bindPopup(`
     <div style="font-family:Consolas,monospace;max-width:280px;">
       <div style="color:${c.color};font-size:12px;font-weight:bold;margin-bottom:4px;">${c.name}</div>
-      <div style="color:#e8e4df;font-size:20px;font-weight:bold;line-height:1.1;">${c.label}</div>
-      <div style="color:#aaa;font-size:13px;margin:3px 0;">${c.detail} · ${c.period}</div>
-      <div style="color:#888;font-size:12px;margin-top:6px;line-height:1.4;">${c.note}</div>
-      <div style="color:#555;font-size:11px;margin-top:6px;border-top:1px solid #222;padding-top:4px;">SRC: ${c.source}</div>
+      <div style="color:#e0d5c8;font-size:20px;font-weight:bold;line-height:1.1;">${c.label}</div>
+      <div style="color:#b0a594;font-size:13px;margin:3px 0;">${c.detail} · ${c.period}</div>
+      <div style="color:#998d7e;font-size:12px;margin-top:6px;line-height:1.4;">${c.note}</div>
+      <div style="color:#6b6155;font-size:11px;margin-top:6px;border-top:1px solid #222;padding-top:4px;">SRC: ${c.source}</div>
     </div>
   `, { maxWidth: 300 });
 });
