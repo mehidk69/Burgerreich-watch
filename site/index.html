@@ -128,17 +128,19 @@
     display:flex; flex-direction:column;
     transition:transform 0.3s ease;
   }
-  .sidebar.collapsed { transform:translateX(calc(-1 * var(--sidebar-w) + 32px)); }
+  .sidebar.collapsed { transform:translateX(calc(-1 * var(--sidebar-w))); }
   .sidebar-toggle {
-    position:absolute; top:8px; right:-28px;
-    width:28px; height:28px;
-    background:var(--glass); border:1px solid var(--glass-border); border-left:none;
-    color:var(--accent); font-size:15px; cursor:pointer;
+    position:absolute; top:50%; right:-36px; transform:translateY(-50%);
+    width:36px; height:80px;
+    background:rgba(10,10,10,0.85); border:1px solid rgba(255,255,255,0.08); border-left:none;
+    color:var(--accent); font-size:18px; cursor:pointer;
     display:flex; align-items:center; justify-content:center;
-    font-family:var(--font); backdrop-filter:blur(12px);
-    border-radius:0 4px 4px 0;
+    font-family:var(--font); backdrop-filter:blur(16px); -webkit-backdrop-filter:blur(16px);
+    border-radius:0 6px 6px 0;
+    transition:all 0.2s;
   }
-  .sidebar-toggle:hover { background:rgba(255,140,0,0.1); }
+  .sidebar-toggle:hover { background:rgba(255,140,0,0.12); border-color:var(--accent); }
+  .sidebar.collapsed .sidebar-toggle { right:-36px; }
 
   /* Sidebar tabs */
   .sidebar-tabs {
@@ -163,6 +165,7 @@
   .sidebar-panel { display:none; padding:18px 20px; }
   .sidebar-panel.active { display:block; }
   #panel-csg { padding:0; }
+  #panel-casualties { padding:0; }
 
   /* CSG sub-tabs */
   .csg-subtabs {
@@ -178,6 +181,95 @@
   .csg-subtab.active { color:var(--accent); border-bottom-color:var(--accent); background:rgba(255,140,0,0.04); }
   .csg-subpanel { display:none; padding:14px 18px; }
   .csg-subpanel.active { display:block; }
+
+  /* Loss items */
+  .loss-item {
+    padding:10px 8px; border-bottom:1px solid rgba(255,255,255,0.05);
+    border-radius:3px; transition:background 0.15s;
+  }
+  .loss-item:last-child { border-bottom:none; }
+  .loss-item[onclick]:hover { background:rgba(255,102,51,0.08); }
+  .loss-item[onclick]:active { background:rgba(255,102,51,0.15); }
+  .loss-header {
+    display:flex; align-items:baseline; gap:8px;
+  }
+  .sidebar-tab-loss { color:#ff6633; border-color:rgba(255,102,51,0.3); }
+  .sidebar-tab-loss.active { color:#ff6633; border-color:#ff6633; background:rgba(255,102,51,0.08); }
+
+  /* ═══ FLOATING LOSSES PANEL ═══ */
+  .losses-panel {
+    position:fixed; top:calc(var(--topbar-h) + var(--ticker-h) + 8px);
+    right:0; width:420px;
+    bottom:8px; z-index:850;
+    background:rgba(10,10,10,0.88); backdrop-filter:blur(16px); -webkit-backdrop-filter:blur(16px);
+    border:1px solid rgba(255,255,255,0.08); border-right:none;
+    border-radius:6px 0 0 6px;
+    display:flex; flex-direction:column;
+    transition:transform 0.3s ease;
+    overflow:visible;
+    transform:translateX(420px);
+  }
+  .losses-panel.open { transform:translateX(0); }
+  .losses-panel-header {
+    padding:14px 18px; border-bottom:1px solid rgba(255,255,255,0.06);
+    display:flex; justify-content:space-between; align-items:center;
+    flex-shrink:0;
+  }
+  .losses-panel-header span { color:#ff6633; font-weight:bold; font-size:14px; letter-spacing:1px; }
+  .losses-panel-toggle {
+    position:absolute; top:50%; left:-36px; transform:translateY(-50%);
+    width:36px; height:80px;
+    background:rgba(10,10,10,0.85); border:1px solid rgba(255,102,51,0.3); border-right:none;
+    color:#ff6633; font-size:18px; cursor:pointer;
+    display:flex; align-items:center; justify-content:center;
+    font-family:var(--font); backdrop-filter:blur(16px); -webkit-backdrop-filter:blur(16px);
+    border-radius:6px 0 0 6px;
+    transition:all 0.2s;
+  }
+  .losses-panel-toggle:hover { background:rgba(255,102,51,0.12); border-color:#ff6633; }
+  .losses-panel-content {
+    flex:1; overflow-y:auto; padding:14px 18px;
+  }
+  .losses-panel-content::-webkit-scrollbar { width:4px; }
+  .losses-panel-content::-webkit-scrollbar-thumb { background:rgba(255,255,255,0.08); border-radius:2px; }
+
+  /* ═══ THREAT GAUGE ═══ */
+  .threat-gauge {
+    position:fixed; bottom:12px; right:12px; z-index:850;
+    background:rgba(10,10,10,0.88); backdrop-filter:blur(16px); -webkit-backdrop-filter:blur(16px);
+    border:1px solid rgba(255,255,255,0.08);
+    border-radius:6px; padding:14px 18px;
+    font-family:var(--font); min-width:220px;
+  }
+  .threat-gauge-title {
+    font-size:10px; color:var(--text-dim); letter-spacing:1.5px;
+    text-transform:uppercase; margin-bottom:10px;
+  }
+  .threat-bar {
+    width:100%; height:8px; background:#1a1a1a; border-radius:4px;
+    overflow:hidden; margin-bottom:4px; position:relative;
+  }
+  .threat-fill {
+    height:100%; border-radius:4px;
+    background:linear-gradient(90deg, #00cc66 0%, #ffcc00 40%, #ff8c00 65%, #ff3333 85%, #cc0000 100%);
+    transition:width 1s ease;
+  }
+  .threat-labels {
+    display:flex; justify-content:space-between; font-size:8px; color:var(--text-dim);
+    margin-bottom:12px;
+  }
+  .threat-level {
+    font-size:16px; font-weight:bold; letter-spacing:1px;
+    margin-bottom:2px;
+  }
+  .midnight-row {
+    display:flex; justify-content:space-between; align-items:baseline;
+    padding-top:10px; border-top:1px solid rgba(255,255,255,0.06);
+    margin-top:10px;
+  }
+  .midnight-label { font-size:10px; color:var(--text-dim); letter-spacing:1px; text-transform:uppercase; }
+  .midnight-time { font-size:22px; font-weight:bold; color:var(--red); }
+  .midnight-sub { font-size:10px; color:var(--text-dim); margin-top:2px; }
   .posture-sub { display:none; padding-top:10px; }
   .posture-sub.active { display:block; }
 
@@ -358,12 +450,14 @@
   <button class="map-ctrl-btn active" onclick="toggleLayer('args',this)">ARG</button>
   <button class="map-ctrl-btn active" onclick="toggleLayer('bases',this)">BASES</button>
   <button class="map-ctrl-btn active" onclick="toggleLayer('posture',this)">POSTURE</button>
+  <button class="map-ctrl-btn active" onclick="toggleLayer('tracks',this)">TRACKS</button>
+  <button class="map-ctrl-btn active" onclick="toggleLayer('losses',this)" style="color:#ff6633;border-color:rgba(255,102,51,0.3);">LOSSES</button>
   <button class="map-ctrl-btn active" onclick="toggleLayer('aircraft',this)">AIR</button>
 </div>
 
 <!-- ═══ SIDEBAR ═══ -->
 <div class="sidebar" id="sidebar">
-  <button class="sidebar-toggle" id="sidebar-toggle" onclick="document.getElementById('sidebar').classList.toggle('collapsed')">◀</button>
+  <button class="sidebar-toggle" id="sidebar-toggle" onclick="const s=document.getElementById('sidebar');s.classList.toggle('collapsed');this.textContent=s.classList.contains('collapsed')?'▶':'◀'">◀</button>
   <div class="sidebar-tabs">
     <button class="sidebar-tab active" onclick="switchSidebar('csg',this)">CSG TRACKER</button>
     <button class="sidebar-tab" onclick="switchSidebar('cocom',this)">COCOM</button>
@@ -433,6 +527,33 @@
   </div>
 </div>
 
+<!-- ═══ THREAT GAUGE ═══ -->
+<div class="threat-gauge">
+  <div class="threat-gauge-title">Global Uncertainty Index</div>
+  <div class="threat-level" style="color:#ff3333;">CRITICAL</div>
+  <div class="threat-bar"><div class="threat-fill" style="width:89%;"></div></div>
+  <div class="threat-labels"><span>LOW</span><span>GUARDED</span><span>ELEVATED</span><span>HIGH</span><span>CRITICAL</span></div>
+  <div class="midnight-row">
+    <div>
+      <div class="midnight-label">Doomsday Clock</div>
+      <div class="midnight-sub">Bulletin of the Atomic Scientists</div>
+    </div>
+    <div style="text-align:right;">
+      <div class="midnight-time">89s</div>
+      <div class="midnight-sub">to midnight</div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ LOSSES PANEL ═══ -->
+<div class="losses-panel" id="losses-panel">
+  <button class="losses-panel-toggle" onclick="document.getElementById('losses-panel').classList.toggle('open')">▶</button>
+  <div class="losses-panel-header">
+    <span>EQUIPMENT LOSSES — EPIC FURY</span>
+  </div>
+  <div class="losses-panel-content" id="losses-body"></div>
+</div>
+
 <!-- ═══ MAIN JS ═══ -->
 <script>
 // ============================================================
@@ -444,25 +565,25 @@ const CARRIER_GROUPS = [
     name: "CSG-3", carrier: "USS Abraham Lincoln", hull: "CVN-72",
     status: "deployed", cocom: "centcom", region: "Arabian Sea / 5th Fleet",
     lastReported: "2026-03-28", note: "Extended deployment, Houthi deterrence ops",
-    lat: 14.5, lng: 62.0
+    lat: 14.5, lng: 62.0, prevLat: 12.0, prevLng: 55.0
   },
   {
     name: "CSG-9", carrier: "USS Theodore Roosevelt", hull: "CVN-71",
     status: "deployed", cocom: "indopacom", region: "Western Pacific / 7th Fleet",
     lastReported: "2026-03-27", note: "Freedom of navigation, Taiwan Strait patrols",
-    lat: 23.5, lng: 121.5
+    lat: 23.5, lng: 121.5, prevLat: 25.0, prevLng: 125.0
   },
   {
     name: "CSG-1", carrier: "USS Carl Vinson", hull: "CVN-70",
     status: "transit", cocom: "indopacom", region: "Pacific Ocean — en route WestPac",
     lastReported: "2026-03-26", note: "Departed San Diego, surge deployment",
-    lat: 22.0, lng: -145.0
+    lat: 22.0, lng: -145.0, prevLat: 32.5, prevLng: -117.2
   },
   {
     name: "CSG-12", carrier: "USS Gerald R. Ford", hull: "CVN-78",
     status: "deployed", cocom: "centcom", region: "Persian Gulf / 5th Fleet",
     lastReported: "2026-03-29", note: "Epic Fury — Iran war operations",
-    lat: 26.0, lng: 52.0
+    lat: 26.0, lng: 52.0, prevLat: 36.8, prevLng: -76.3
   },
   {
     name: "CSG-2", carrier: "USS Dwight D. Eisenhower", hull: "CVN-69",
@@ -474,13 +595,13 @@ const CARRIER_GROUPS = [
     name: "CSG-10", carrier: "USS George H.W. Bush", hull: "CVN-77",
     status: "deployed", cocom: "eucom", region: "Mediterranean Sea / 6th Fleet",
     lastReported: "2026-03-29", note: "NATO deterrence, Eastern Med presence",
-    lat: 34.5, lng: 30.0
+    lat: 34.5, lng: 30.0, prevLat: 36.5, prevLng: 24.0
   },
   {
     name: "CSG-5", carrier: "USS Ronald Reagan", hull: "CVN-76",
     status: "deployed", cocom: "indopacom", region: "Philippine Sea / 7th Fleet",
     lastReported: "2026-03-28", note: "Forward-deployed, Yokosuka replacement cycle",
-    lat: 18.0, lng: 132.0
+    lat: 18.0, lng: 132.0, prevLat: 22.0, prevLng: 135.0
   },
   {
     name: "CSG-8", carrier: "USS Harry S. Truman", hull: "CVN-75",
@@ -504,7 +625,7 @@ const CARRIER_GROUPS = [
     name: "CSG-4", carrier: "USS George Washington", hull: "CVN-73",
     status: "deployed", cocom: "indopacom", region: "Western Pacific / 7th Fleet",
     lastReported: "2026-03-27", note: "Forward-deployed Yokosuka — replaced Reagan",
-    lat: 35.28, lng: 139.67
+    lat: 35.28, lng: 139.67, prevLat: 32.0, prevLng: 135.0
   }
 ];
 
@@ -513,31 +634,31 @@ const ARG_DATA = [
     name: "Bataan ARG / 26th MEU", ship: "USS Bataan (LHD-5)",
     status: "deployed", cocom: "centcom", region: "Red Sea / 5th Fleet",
     lastReported: "2026-03-29", note: "Houthi response, maritime security",
-    lat: 15.5, lng: 41.0
+    lat: 15.5, lng: 41.0, prevLat: 13.0, prevLng: 43.5
   },
   {
     name: "Boxer ARG / 13th MEU", ship: "USS Boxer (LHD-4)",
     status: "deployed", cocom: "indopacom", region: "South China Sea",
     lastReported: "2026-03-27", note: "Amphibious readiness, SCS presence",
-    lat: 11.0, lng: 114.0
+    lat: 11.0, lng: 114.0, prevLat: 14.0, prevLng: 118.0
   },
   {
     name: "Wasp ARG / 24th MEU", ship: "USS Wasp (LHD-1)",
     status: "deployed", cocom: "eucom", region: "Eastern Mediterranean",
     lastReported: "2026-03-28", note: "Epic Fury support, NEO readiness",
-    lat: 34.0, lng: 33.0
+    lat: 34.0, lng: 33.0, prevLat: 36.0, prevLng: -8.0
   },
   {
     name: "Makin Island ARG / 11th MEU", ship: "USS Makin Island (LHD-8)",
     status: "deployed", cocom: "centcom", region: "Arabian Gulf / 5th Fleet",
     lastReported: "2026-03-28", note: "Epic Fury — amphibious support ops",
-    lat: 25.0, lng: 54.0
+    lat: 25.0, lng: 54.0, prevLat: 21.0, prevLng: 59.0
   },
   {
     name: "America ARG / 31st MEU", ship: "USS America (LHA-6)",
     status: "deployed", cocom: "indopacom", region: "East China Sea / 7th Fleet",
     lastReported: "2026-03-26", note: "Forward-deployed Sasebo, Japan",
-    lat: 30.0, lng: 128.0
+    lat: 30.0, lng: 128.0, prevLat: 33.0, prevLng: 130.0
   },
   {
     name: "Tripoli ARG / 15th MEU", ship: "USS Tripoli (LHA-7)",
@@ -580,6 +701,45 @@ const POSTURE_CHANGES = [
   { date: "2026-03-22", text: "B-52H Stratofortress deployment to Diego Garcia confirmed (STRATCOM)", tag: "air" },
   { date: "2026-03-19", text: "THAAD battery repositioned within CENTCOM AOR (location undisclosed)", tag: "posture" },
   { date: "2026-03-15", text: "Additional F-35A squadron rotated to Kadena AB, Okinawa", tag: "air" }
+];
+
+const EQUIPMENT_LOSSES = [
+  {
+    category: "AIRCRAFT — DESTROYED",
+    items: [
+      { type: "F-15E Strike Eagle", qty: 3, date: "2026-03-01", cause: "Kuwaiti friendly fire", cost: "$282M", note: "All 6 aircrew ejected safely. Engaged by Kuwaiti air defenses during opening strikes.", lat: 29.2, lng: 47.5, loc: "Kuwait" },
+      { type: "KC-135 Stratotanker", qty: 1, date: "2026-03-12", cause: "Crash — western Iraq", cost: "$80M", note: "6 crew KIA. Lost during refueling operations over Iraq.", lat: 33.3, lng: 41.0, loc: "Western Iraq" },
+      { type: "MQ-9 Reaper", qty: 12, date: "Feb–Mar 2026", cause: "Iranian air defenses (SAM)", cost: "$192–678M", note: "Shot down over Iranian airspace. 10%+ of fleet lost since 2023.", lat: 32.5, lng: 53.0, loc: "Over Iran" }
+    ]
+  },
+  {
+    category: "AIRCRAFT — DAMAGED",
+    items: [
+      { type: "F-35A Lightning II", qty: 1, date: "2026-03-19", cause: "Iranian anti-aircraft fire", cost: "TBD", note: "First combat hit on F-35. Pilot wounded (shrapnel). Emergency landing, airframe recoverable.", lat: 33.0, lng: 51.5, loc: "Over Iran" },
+      { type: "KC-135 / KC-46 Tankers", qty: 5, date: "2026-03-04", cause: "Iranian missile strike", cost: "TBD", note: "Struck on the ground at Prince Sultan AB, Saudi Arabia.", lat: 20.07, lng: 45.06, loc: "Prince Sultan AB, Saudi Arabia" }
+    ]
+  },
+  {
+    category: "AIR DEFENSE / RADAR",
+    items: [
+      { type: "AN/TPY-2 THAAD Radar", qty: 4, date: "Feb–Mar 2026", cause: "Iranian ballistic missiles", cost: "~$2B", note: "Hit across UAE, Jordan, and Saudi Arabia. Extent of damage unclear.", lat: 24.5, lng: 54.5, loc: "UAE / Jordan / Saudi Arabia" },
+      { type: "AN/FPS-132 Early Warning Radar", qty: 1, date: "2026-02-28", cause: "Iranian missile strike", cost: "$1.1B", note: "Al Udeid AB, Qatar. Struck during initial Iranian retaliation.", lat: 25.12, lng: 51.31, loc: "Al Udeid AB, Qatar" },
+      { type: "AN/GSC-52B SATCOM Terminal", qty: 2, date: "2026-03-01", cause: "Iranian missile strike", cost: "~$20M", note: "NSA Bahrain (5th Fleet HQ). Buildings also destroyed.", lat: 26.24, lng: 50.60, loc: "NSA Bahrain" }
+    ]
+  },
+  {
+    category: "NAVAL",
+    items: [
+      { type: "USS Gerald R. Ford (CVN-78)", qty: 1, date: "2026-03-23", cause: "Internal fire", cost: "TBD", note: "Diverted to Souda Bay, Greece for repairs. Operational status uncertain.", lat: 35.49, lng: 24.07, loc: "Souda Bay, Greece" }
+    ]
+  },
+  {
+    category: "INFRASTRUCTURE",
+    items: [
+      { type: "US Embassy Kuwait", qty: 1, date: "2026-03-02", cause: "Iranian strike", cost: "TBD", note: "Embassy struck and closed indefinitely. No casualties.", lat: 29.37, lng: 47.97, loc: "Kuwait City" },
+      { type: "Buildings — NSA Bahrain", qty: 0, date: "2026-03-01", cause: "Iranian missile strike", cost: "TBD", note: "Multiple large buildings destroyed at 5th Fleet HQ.", lat: 26.24, lng: 50.60, loc: "NSA Bahrain" }
+    ]
+  }
 ];
 
 const COCOM_DATA = {
@@ -1012,6 +1172,57 @@ function renderAircraft() {
   `).join('');
 }
 
+function renderLosses() {
+  const body = document.getElementById('losses-body');
+  let lossId = 0;
+  
+  let html = '';
+  
+  EQUIPMENT_LOSSES.forEach(cat => {
+    html += `<div class="section-label">${cat.category}</div>`;
+    cat.items.forEach(item => {
+      const qtyStr = item.qty > 0 ? `<span style="color:var(--red);font-weight:bold;font-size:16px;">${item.qty}×</span>` : '';
+      const clickable = item.lat ? `style="cursor:pointer;" onclick="flyToLoss(${item.lat},${item.lng},'${item.type.replace(/'/g,"\\'")}')" title="Click to locate on map — ${item.loc}"` : '';
+      html += `<div class="loss-item" ${clickable}>
+        <div class="loss-header">
+          ${qtyStr}
+          <span style="color:#fbc387;font-weight:bold;font-size:14px;">${item.type}</span>
+          ${item.loc ? `<span style="color:#ff6633;font-size:10px;margin-left:auto;">📍 ${item.loc}</span>` : ''}
+        </div>
+        <div style="color:var(--text);font-size:12px;margin-top:4px;">
+          <span style="color:var(--red);font-size:11px;">CAUSE:</span> ${item.cause}
+          <span style="color:var(--text-dim);font-size:11px;margin-left:8px;">${item.date}</span>
+        </div>
+        <div style="color:var(--text-dim);font-size:11px;margin-top:3px;">${item.note}</div>
+        ${item.cost ? `<div style="color:var(--accent);font-size:11px;margin-top:2px;">EST. COST: ${item.cost}</div>` : ''}
+      </div>`;
+      lossId++;
+    });
+  });
+  
+  html += '<div class="section-label">ESTIMATED TOTAL COST</div>';
+  html += '<div style="color:var(--red);font-size:20px;font-weight:bold;margin-bottom:6px;">~$3.84B+</div>';
+  html += '<div style="color:var(--text-dim);font-size:11px;">First 2 weeks of Epic Fury. SRC: Anadolu / open-source estimates</div>';
+  
+  body.innerHTML = html;
+}
+
+function flyToLoss(lat, lng, type) {
+  if (!window.ftMap) return;
+  window.ftMap.flyTo([lat, lng], 7, { duration: 1 });
+  // Open matching marker popup
+  if (window.ftLayers && window.ftLayers.losses) {
+    window.ftLayers.losses.eachLayer(marker => {
+      if (marker.getLatLng && marker.getPopup) {
+        const ll = marker.getLatLng();
+        if (Math.abs(ll.lat - lat) < 0.5 && Math.abs(ll.lng - lng) < 0.5) {
+          marker.openPopup();
+        }
+      }
+    });
+  }
+}
+
 function renderTools() {
   const grid = document.getElementById('tools-grid');
   grid.innerHTML = TOOLS.map(t => `
@@ -1103,8 +1314,9 @@ function switchSidebar(panel, btn) {
 }
 
 function switchCSGSub(sub, btn) {
-  document.querySelectorAll('.csg-subtab').forEach(t => t.classList.remove('active'));
-  document.querySelectorAll('.csg-subpanel').forEach(p => p.classList.remove('active'));
+  const panel = document.getElementById('panel-csg');
+  panel.querySelectorAll('.csg-subtab').forEach(t => t.classList.remove('active'));
+  panel.querySelectorAll('.csg-subpanel').forEach(p => p.classList.remove('active'));
   btn.classList.add('active');
   document.getElementById('sub-' + sub).classList.add('active');
 }
@@ -1173,6 +1385,7 @@ renderPosture();
 renderCOCOM('centcom');
 renderAircraft();
 renderTools();
+renderLosses();
 renderSources();
 renderTollDetails();
 
@@ -1437,7 +1650,9 @@ window.ftLayers = {
   args: L.layerGroup().addTo(map),
   bases: L.layerGroup().addTo(map),
   aircraft: L.layerGroup().addTo(map),
-  posture: L.layerGroup().addTo(map)
+  posture: L.layerGroup().addTo(map),
+  tracks: L.layerGroup().addTo(map),
+  losses: L.layerGroup().addTo(map)
 };
 const layers = window.ftLayers;
 
@@ -1463,6 +1678,65 @@ MAP_ARGS.forEach(a => {
       a.note
     ], a.cocom), { maxWidth: 280 });
   layers.args.addLayer(marker);
+});
+
+// ── Movement Trail Lines ──
+function drawTrack(item, color) {
+  if (!item.prevLat || !item.prevLng) return;
+  // Dashed line from previous to current position
+  const trail = L.polyline(
+    [[item.prevLat, item.prevLng], [item.lat, item.lng]],
+    { color: color, weight: 1.5, opacity: 0.5, dashArray: '6,4', interactive: false }
+  );
+  layers.tracks.addLayer(trail);
+  // Small hollow circle at previous position
+  const prev = L.circleMarker([item.prevLat, item.prevLng], {
+    radius: 4, color: color, weight: 1, opacity: 0.4,
+    fillColor: 'transparent', fillOpacity: 0
+  }).bindPopup(`<div style="font-family:Consolas,monospace;font-size:12px;color:#998d7e;">Previous position</div>`, { maxWidth: 160 });
+  layers.tracks.addLayer(prev);
+}
+
+CARRIER_GROUPS.forEach(c => drawTrack(c, '#ff3333'));
+ARG_DATA.forEach(a => drawTrack(a, '#ffcc00'));
+
+// ── Add Loss Markers ──
+let lossIdx = 0;
+EQUIPMENT_LOSSES.forEach(cat => {
+  cat.items.forEach(item => {
+    if (!item.lat) return;
+    const icon = L.divIcon({
+      className: 'custom-marker',
+      html: `<div style="
+        width:14px; height:14px; position:relative;
+      ">
+        <div style="position:absolute;top:0;left:0;width:14px;height:14px;
+          border:2px solid #ff6633; background:rgba(255,102,51,0.15);
+          transform:rotate(45deg);
+        "></div>
+        <div style="position:absolute;top:3px;left:3px;width:8px;height:8px;
+          background:#ff6633; transform:rotate(45deg); opacity:0.6;
+        "></div>
+      </div>`,
+      iconSize: [14, 14],
+      iconAnchor: [7, 7],
+      popupAnchor: [0, -10]
+    });
+    const qtyStr = item.qty > 0 ? `${item.qty}× ` : '';
+    const marker = L.marker([item.lat, item.lng], { icon })
+      .bindPopup(`
+        <div style="font-family:Consolas,monospace;">
+          <div class="popup-title" style="color:#ff6633;">✕ ${qtyStr}${item.type}</div>
+          <div style="color:#e0d5c8;font-size:12px;margin-top:4px;">${item.cause}</div>
+          <div style="color:#9a8e80;font-size:11px;margin-top:3px;">${item.date} · ${item.loc}</div>
+          <div style="color:#9a8e80;font-size:11px;margin-top:3px;">${item.note}</div>
+          ${item.cost ? `<div style="color:#ff6633;font-size:11px;margin-top:4px;">EST. COST: ${item.cost}</div>` : ''}
+        </div>
+      `, { maxWidth: 300 });
+    item._markerIdx = lossIdx;
+    layers.losses.addLayer(marker);
+    lossIdx++;
+  });
 });
 
 // ── Add Bases ──
