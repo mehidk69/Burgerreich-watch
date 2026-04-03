@@ -24,8 +24,8 @@ Outputs to site/data/:
 
 import json
 import re
-import os
 import sys
+import time
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -42,10 +42,18 @@ DATA_DIR.mkdir(parents=True, exist_ok=True)
 HEADERS = {"User-Agent": "BURGERREICH-watch/2.0 (OSINT; dasdemarc.substack.com)"}
 NOW = datetime.now(timezone.utc).isoformat()
 
-def fetch(url, timeout=30):
-    resp = requests.get(url, headers=HEADERS, timeout=timeout)
-    resp.raise_for_status()
-    return resp.text
+def fetch(url, timeout=30, retries=2):
+    for attempt in range(retries + 1):
+        try:
+            resp = requests.get(url, headers=HEADERS, timeout=timeout)
+            resp.raise_for_status()
+            return resp.text
+        except requests.RequestException as e:
+            if attempt == retries:
+                raise
+            wait = 5 * (attempt + 1)
+            print(f"  ⟳ Retry {attempt+1}/{retries} in {wait}s — {e}")
+            time.sleep(wait)
 
 def save(filename, data):
     path = DATA_DIR / filename
@@ -80,7 +88,7 @@ def collect_fleet():
     carriers = []
     # Pattern: "USS [Name] (CVN-XX) is [in/operating/underway] [location]"
     for m in re.finditer(
-        r'(?:Aircraft carrier\s+)?(USS\s+[\w\.\s]+?)\s*\((CVN-\d+)\)\s+(?:is|arrived|departed|returned)\s+(?:\w+\s+)?(?:in\s+)?(?:the\s+)?([\w\s,\-]+?)(?:\.|,|$)',
+        r'(?:Aircraft\s+)?(?:[Cc]arrier\s+)?(USS\s+[\w\.\s]+?)\s*\((CVN-\d+)\)\s+(?:is|was|arrived|departed|returned|operating)\s+(?:\w+\s+)?(?:in\s+)?(?:the\s+)?([\w\s,\-]+?)(?:\.|,|$)',
         body, re.MULTILINE
     ):
         hull = m.group(2).strip()
@@ -88,24 +96,24 @@ def collect_fleet():
             loc = m.group(3).strip()[:60]
             ctx = body[max(0,m.start()-200):m.end()+200].lower()
             status = "DEPLOYED"
-            if "homeport" in ctx or "arrived" in ctx and ("norfolk" in loc.lower() or "san diego" in loc.lower() or "bremerton" in loc.lower() or "yokosuka" in loc.lower()):
+            if "homeport" in ctx or ("arrived" in ctx and ("norfolk" in loc.lower() or "san diego" in loc.lower() or "bremerton" in loc.lower() or "yokosuka" in loc.lower())):
                 status = "HOMEPORT"
             elif "maintenance" in ctx or "overhaul" in ctx:
                 status = "MAINTENANCE"
-            elif "en route" in ctx or "transit" in ctx or "underway" in ctx and "deploy" not in ctx:
+            elif "en route" in ctx or "transit" in ctx or ("underway" in ctx and "deploy" not in ctx):
                 status = "TRANSIT"
             carriers.append({"name": m.group(1).strip(), "hull": hull, "location": loc, "status": status})
     
     args = []
     for m in re.finditer(
-        r'(USS\s+[\w\.\s]+?)\s*\((LH[AD]-\d+)\)\s+(?:is|arrived|departed)\s+(?:\w+\s+)?(?:in\s+)?(?:the\s+)?([\w\s,\-]+?)(?:\.|,|$)',
+        r'(USS\s+[\w\.\s]+?)\s*\((LH[AD]-\d+)\)\s+(?:is|was|arrived|departed|operating)\s+(?:\w+\s+)?(?:in\s+)?(?:the\s+)?([\w\s,\-]+?)(?:\.|,|$)',
         body, re.MULTILINE
     ):
         hull = m.group(2).strip()
         if not any(a["hull"] == hull for a in args):
             loc = m.group(3).strip()[:60]
             ctx = body[max(0,m.start()-200):m.end()+200].lower()
-            status = "DEPLOYED" if "deploy" in ctx or "operating" in ctx else "HOMEPORT"
+            status = "DEPLOYED" if ("deploy" in ctx or "operating" in ctx or "en route" in ctx) else "HOMEPORT"
             args.append({"name": m.group(1).strip(), "hull": hull, "location": loc, "status": status})
     
     # Battle force numbers
@@ -141,11 +149,11 @@ def collect_casualties():
         m = re.search(p, body, re.IGNORECASE)
         if m: kia = m.group(1); break
     
-    # Find US WIA  
+    # Find US WIA — tight patterns first, broad last
     wia = None
     for p in [r'(\d+[\+]?)\s+(?:U\.?S\.?|American)\s+(?:service members?|military personnel|troops?)\s+(?:have been\s+)?(?:wounded|injured)',
-              r'approximately\s+(\d+[\+]?)\s+(?:U\.?S\.?|American)\s+.*?wounded',
-              r'(\d+[\+]?)\s+wounded']:
+              r'approximately\s+(\d+[\+]?)\s+(?:U\.?S\.?|American)\s+.*?(?:wounded|injured)',
+              r'(\d+[\+]?)\s+(?:U\.?S\.?|American)\s+.*?(?:wounded|injured)']:
         m = re.search(p, body, re.IGNORECASE)
         if m: wia = m.group(1); break
     
@@ -192,7 +200,10 @@ def collect_losses():
     for pat, equip, status in patterns:
         m = re.search(pat, body, re.IGNORECASE)
         if m:
-            q = m.group(1) if m.lastindex else "1"
+            try:
+                q = m.group(1)
+            except (IndexError, AttributeError):
+                q = "1"
             qty = word_nums.get(q.lower(), int(q) if q.isdigit() else 1)
             items.append({"type": equip, "qty": qty, "status": status})
     
