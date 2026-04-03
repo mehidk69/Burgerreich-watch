@@ -1,0 +1,26 @@
+{
+  "updated": "2026-04-03T21:41:20.668686+00:00",
+  "source": "Wikipedia / CENTCOM",
+  "us_kia_confirmed": "4",
+  "us_wia_confirmed": "29",
+  "operations": [
+    {
+      "name": "Operation Epic Fury",
+      "kia": "4",
+      "wia": "29",
+      "period": "Feb 28, 2026\u2013present"
+    },
+    {
+      "name": "Tower 22 (Jordan)",
+      "kia": "3",
+      "wia": "47",
+      "period": "Jan 28, 2024"
+    },
+    {
+      "name": "Syria ISIS Ambush",
+      "kia": "3",
+      "wia": "3",
+      "period": "Dec 14, 2025"
+    }
+  ]
+}
