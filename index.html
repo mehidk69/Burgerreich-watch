@@ -1582,6 +1582,133 @@ renderTollDetails();
   }
 })();
 
+// ============================================================
+// HYDRATE FROM COLLECTOR JSONs — overlay live data on seed
+// ============================================================
+(async function hydrateLiveData() {
+
+  // ── Fleet positions ──
+  try {
+    const resp = await fetch('data/fleet.json');
+    if (resp.ok) {
+      const fleet = await resp.json();
+      if (fleet.carriers && fleet.carriers.length > 0) {
+        fleet.carriers.forEach(live => {
+          const match = CARRIER_GROUPS.find(c => c.hull === live.hull);
+          if (match) {
+            match.region = live.location || match.region;
+            match.status = (live.status || match.status).toLowerCase();
+            match.lastReported = (fleet.updated || '').slice(0, 10);
+          }
+        });
+        fleet.args && fleet.args.forEach(live => {
+          const match = ARG_DATA.find(a => a.ship && a.ship.includes(live.hull));
+          if (match) {
+            match.region = live.location || match.region;
+            match.status = (live.status || match.status).toLowerCase();
+            match.lastReported = (fleet.updated || '').slice(0, 10);
+          }
+        });
+        renderCSG();
+        console.log('[HYDRATE] Fleet updated:', fleet.carriers.length, 'carriers');
+      }
+    }
+  } catch(e) { console.log('[HYDRATE] Fleet: using seed'); }
+
+  // ── Casualties ──
+  try {
+    const resp = await fetch('data/casualties.json');
+    if (resp.ok) {
+      const cas = await resp.json();
+      if (cas.us_kia_confirmed) {
+        // Update topbar Epic Fury numbers
+        const kiaEl = document.querySelector('.cas-group:first-child .cas-kia');
+        const wiaEl = document.querySelector('.cas-group:first-child .cas-wia');
+        if (kiaEl && cas.us_kia_confirmed) kiaEl.textContent = cas.us_kia_confirmed;
+        if (wiaEl && cas.us_wia_confirmed) wiaEl.textContent = cas.us_wia_confirmed;
+        
+        // Update toll data
+        const ef = CONFLICT_TOLL_DATA.find(c => c.name.includes('EPIC FURY'));
+        if (ef) {
+          ef.label = `${cas.us_kia_confirmed} KIA · ${cas.us_wia_confirmed || '348'} WIA`;
+        }
+        renderTollDetails();
+        console.log('[HYDRATE] Casualties updated: KIA=' + cas.us_kia_confirmed + ' WIA=' + cas.us_wia_confirmed);
+      }
+    }
+  } catch(e) { console.log('[HYDRATE] Casualties: using seed'); }
+
+  // ── Equipment losses ──
+  try {
+    const resp = await fetch('data/losses.json');
+    if (resp.ok) {
+      const losses = await resp.json();
+      if (losses.items && losses.items.length > 0) {
+        // Update confirmed loss quantities from live scrape
+        losses.items.forEach(live => {
+          EQUIPMENT_LOSSES.forEach(cat => {
+            if (cat.unconfirmed) return;
+            cat.items.forEach(seed => {
+              if (seed.type.includes(live.type.split(' ')[0]) || live.type.includes(seed.type.split(' ')[0])) {
+                if (live.qty > seed.qty) seed.qty = live.qty;
+              }
+            });
+          });
+        });
+        renderLosses();
+        console.log('[HYDRATE] Losses updated:', losses.items.length, 'entries');
+      }
+    }
+  } catch(e) { console.log('[HYDRATE] Losses: using seed'); }
+
+  // ── Troop posture ──
+  try {
+    const resp = await fetch('data/posture.json');
+    if (resp.ok) {
+      const pos = await resp.json();
+      if (pos.total_middle_east) {
+        const me = FORCE_POSTURE.find(p => p.region.includes('Middle East'));
+        if (me) {
+          me.count = pos.total_middle_east.includes(',') ? pos.total_middle_east + '+' : pos.total_middle_east + '+';
+          renderPosture();
+        }
+        console.log('[HYDRATE] Posture: Middle East total = ' + pos.total_middle_east);
+      }
+    }
+  } catch(e) { console.log('[HYDRATE] Posture: using seed'); }
+
+  // ── Commanders ──
+  try {
+    const resp = await fetch('data/commanders.json');
+    if (resp.ok) {
+      const cmd = await resp.json();
+      if (cmd.commanders) {
+        Object.entries(cmd.commanders).forEach(([cocom, data]) => {
+          if (COCOM_DATA[cocom] && data.name && !data.name.includes('error') && data.name !== 'check manually') {
+            COCOM_DATA[cocom].commander = data.name;
+          }
+        });
+        console.log('[HYDRATE] Commanders updated');
+      }
+    }
+  } catch(e) { console.log('[HYDRATE] Commanders: using seed'); }
+
+  // ── Doomsday Clock ──
+  try {
+    const resp = await fetch('data/doomsday.json');
+    if (resp.ok) {
+      const doom = await resp.json();
+      if (doom.seconds_to_midnight) {
+        const el = document.querySelector('.midnight-time');
+        if (el) el.textContent = doom.seconds_to_midnight + 's';
+        console.log('[HYDRATE] Doomsday: ' + doom.seconds_to_midnight + 's');
+      }
+    }
+  } catch(e) { console.log('[HYDRATE] Doomsday: using seed'); }
+
+  console.log('[HYDRATE] Complete — live data overlaid on seed');
+})();
+
 </script>
 
 <!-- ═══ LEAFLET ═══ -->
