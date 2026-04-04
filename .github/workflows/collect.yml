@@ -14,14 +14,49 @@ jobs:
   collect:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
         with:
           python-version: '3.11'
-      - run: pip install requests beautifulsoup4 lxml feedparser
-      - run: python collectors/collect_osint.py
+          cache: 'pip'
+          cache-dependency-path: collectors/requirements.txt
+
+      - name: Install dependencies
+        run: pip install -r collectors/requirements.txt
+
+      - name: Collect OSINT feeds
+        run: python collectors/collect_osint.py
         continue-on-error: true
-      - run: |
+
+      - name: Collect CENTCOM
+        run: cd collectors && python collect_centcom.py || true
+        continue-on-error: true
+
+      - name: Collect EUCOM
+        run: cd collectors && python collect_eucom.py || true
+        continue-on-error: true
+
+      - name: Collect INDOPACOM
+        run: cd collectors && python collect_indopacom.py || true
+        continue-on-error: true
+
+      - name: Collect AFRICOM
+        run: cd collectors && python collect_africom.py || true
+        continue-on-error: true
+
+      - name: Collect STRATCOM
+        run: cd collectors && python collect_stratcom.py || true
+        continue-on-error: true
+
+      - name: Merge feeds
+        run: python collectors/merge_feeds.py
+        continue-on-error: true
+
+      - name: Commit and push
+        run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add site/data/ || true
