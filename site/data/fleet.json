@@ -1,0 +1,53 @@
+{
+  "updated": "2026-05-23T03:36:53.279334+00:00",
+  "source_url": "https://news.usni.org/2026/05/18/usni-news-fleet-and-marine-tracker-may-18-2026",
+  "battle_force": null,
+  "deployed": "25",
+  "underway": null,
+  "carriers": [
+    {
+      "name": "USS\u00a0\nGeorge Washington",
+      "hull": "CVN-73",
+      "location": "to Yokosuka",
+      "status": "TRANSIT"
+    },
+    {
+      "name": "USS\u00a0\nTheodore Roosevelt",
+      "hull": "CVN-71",
+      "location": "to San Diego",
+      "status": "DEPLOYED"
+    },
+    {
+      "name": "USS\u00a0\nDwight D. Eisenhower",
+      "hull": "CVN-69",
+      "location": "to Norfolk",
+      "status": "DEPLOYED"
+    },
+    {
+      "name": "USS\u00a0\nGerald R. Ford",
+      "hull": "CVN-78",
+      "location": "to Norfolk after completing an 11-month deployment",
+      "status": "DEPLOYED"
+    }
+  ],
+  "args": [
+    {
+      "name": "USS\u00a0\nTripoli",
+      "hull": "LHA-7",
+      "location": "operating in the CENTCOM area of responsibility",
+      "status": "DEPLOYED"
+    },
+    {
+      "name": "USS\u00a0\nBoxer",
+      "hull": "LHD-4",
+      "location": "Strait of Malacca",
+      "status": "DEPLOYED"
+    },
+    {
+      "name": "USS\u00a0\nMakin Island",
+      "hull": "LHD-8",
+      "location": "Eastern Pacific",
+      "status": "DEPLOYED"
+    }
+  ]
+}
