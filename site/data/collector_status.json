@@ -1,5 +1,5 @@
 {
-  "last_run": "2026-06-08T15:59:17.188351+00:00",
+  "last_run": "2026-06-08T16:55:44.810237+00:00",
   "errors": [
     "Fleet: 403 Client Error: Forbidden for url: https://news.usni.org/category/fleet-tracker"
   ],
