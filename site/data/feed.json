@@ -1,5 +1,45 @@
 [
   {
+    "id": "ed6ede086a7e",
+    "title": "Inside the EOC during Coyote Storm 26.1",
+    "url": "https://moguard.joint.afpims.mil/Contact-Us/Article/4556990/inside-the-eoc-during-coyote-storm-261/",
+    "date": "2026-07-27T23:33:20Z",
+    "source": "CENTCOM",
+    "cocom": "centcom",
+    "tag": "posture",
+    "summary": ""
+  },
+  {
+    "id": "0d1d7efe6406",
+    "title": "Inside the DFAC during Coyote Storm 26.1",
+    "url": "https://moguard.joint.afpims.mil/Contact-Us/Article/4556974/inside-the-dfac-during-coyote-storm-261/",
+    "date": "2026-07-27T23:19:00Z",
+    "source": "CENTCOM",
+    "cocom": "centcom",
+    "tag": "posture",
+    "summary": ""
+  },
+  {
+    "id": "2dfba8cc0d4f",
+    "title": "Search and recovery training during Coyote Storm 26.1",
+    "url": "https://moguard.joint.afpims.mil/Contact-Us/Article/4556966/search-and-recovery-training-during-coyote-storm-261/",
+    "date": "2026-07-27T23:06:00Z",
+    "source": "CENTCOM",
+    "cocom": "centcom",
+    "tag": "exercise",
+    "summary": ""
+  },
+  {
+    "id": "b7600b7ae5b3",
+    "title": "Flightline training during Coyote Storm 26.1",
+    "url": "https://moguard.joint.afpims.mil/Contact-Us/Article/4556959/flightline-training-during-coyote-storm-261/",
+    "date": "2026-07-27T22:52:03Z",
+    "source": "CENTCOM",
+    "cocom": "centcom",
+    "tag": "air",
+    "summary": ""
+  },
+  {
     "id": "7a2d1744ba4d",
     "title": "Col. Porter Immersion Tour",
     "url": "https://moguard.joint.afpims.mil/Contact-Us/Article/4548359/col-porter-immersion-tour/",
@@ -458,45 +498,5 @@
     "cocom": "centcom",
     "tag": "alert",
     "summary": "A U.S. Air Force Pararescueman assigned to the 68th Rescue Squadron searches for potential casualties during the Combat Leader Course confined space rescue scenario at the Titan Missile Museum in Green Valley, Arizona, March 31, 2026. Each area was methodically cleared to ensure no casualties were o"
-  },
-  {
-    "id": "8a7da043ddec",
-    "title": "New Mission Ready Airmen program strengthens deployment readiness",
-    "url": "https://moguard.joint.afpims.mil/Contact-Us/Article/4450999/new-mission-ready-airmen-program-strengthens-deployment-readiness/",
-    "date": "2026-04-02T21:02:07Z",
-    "source": "CENTCOM",
-    "cocom": "centcom",
-    "tag": "air",
-    "summary": "DAVIS-MONTHAN AIR FORCE BASE, Ariz. \u2014 U.S. Airmen at Davis-Monthan Air Force Base are expanding their deployment readiness through the Mission Ready Airmen program, an initiative designed to prepare service members for the challenges they may face in deployed environments.<br />\n<img alt=\"U.S. Air F"
-  },
-  {
-    "id": "6a064570836b",
-    "title": "355th Wing commanders explore leadership lessons during offsite In Gardner Canyon",
-    "url": "https://moguard.joint.afpims.mil/Contact-Us/Article/4447275/355th-wing-commanders-explore-leadership-lessons-during-offsite-in-gardner-cany/",
-    "date": "2026-03-30T16:50:00Z",
-    "source": "CENTCOM",
-    "cocom": "centcom",
-    "tag": "naval",
-    "summary": "DAVIS-MONTHAN AIR FORCE BASE, Ariz. -- Leaders from across Davis-Monthan Air Force Base\u2019s 355th Wing gathered for an offsite focused on strengthening relationships, building morale and preparing for future challenges in Gardner Canyon, Arizona, March 23-24, 2026.<br />\n<img alt=\"U.S. Air Force Senio"
-  },
-  {
-    "id": "4f1fcfc5fb34",
-    "title": "DM hosts a Senior Selects Professional Enhancement Seminar",
-    "url": "https://moguard.joint.afpims.mil/Contact-Us/Article/4446528/dm-hosts-a-senior-selects-professional-enhancement-seminar/",
-    "date": "2026-03-27T21:05:00Z",
-    "source": "CENTCOM",
-    "cocom": "centcom",
-    "tag": "naval",
-    "summary": "The 355th Wing hosted a Professional Enhancement Seminar to prepare newly selected senior master sergeants for the transition into one of the Air Force\u2019s most demanding leadership roles March 25\u201327, 2026.<br />\n<img alt=\"DM hosts a Senior Selects Professional Enhancement Seminar\" src=\"https://media."
-  },
-  {
-    "id": "6cadac822321",
-    "title": "A-10 Makes Final Luke Days Appearance",
-    "url": "https://moguard.joint.afpims.mil/Contact-Us/Article/4444478/a-10-makes-final-luke-days-appearance/",
-    "date": "2026-03-25T21:07:14Z",
-    "source": "CENTCOM",
-    "cocom": "centcom",
-    "tag": "air",
-    "summary": "A-10C Thunderbolt II aircraft from Davis-Monthan Air Force Base performed a combat arms demonstration at the Luke Days Air Show at Luke AFB, Arizona, March 22, 2026\u2013marking their final Luke Days appearance as the aircraft divests and pilots transition to the F-35A Lightning II and other Air Force as"
   }
 ]
